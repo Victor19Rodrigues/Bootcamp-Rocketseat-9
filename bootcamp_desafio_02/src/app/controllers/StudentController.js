@@ -24,20 +24,46 @@ class MeetappController {
   }
 
   async store(req, res) {
+    const studentExists = await Student.findOne({
+      where: { email: req.body.email },
+    });
+
+    if (studentExists) {
+      return res.status(400).json({ error: 'Student already exists.' });
+    }
+
     const user_id = req.userId;
 
-    const student = await Student.create({
+    const { id, name, email, age, weight, height } = await Student.create({
       ...req.body,
       user_id,
     });
 
-    return res.json(student);
+    return res.json({ id, name, email, age, weight, height, user_id });
   }
 
   async update(req, res) {
     const user_id = req.userId;
 
     const student = await Student.findByPk(req.params.id);
+
+    if (!student) {
+      return res.status(400).json({ error: 'Student does not exists' });
+    }
+
+    const studentExists = await Student.findOne({
+      where: { email: req.body.email },
+    });
+
+    if (studentExists) {
+      return res.status(400).json({ error: 'Email already exists.' });
+    }
+
+    const { email } = student;
+    const { email: sendedEmail } = req.body;
+    if (email === sendedEmail) {
+      return res.status(400).json({ error: 'This email already exists' });
+    }
 
     if (student.user_id !== user_id) {
       return res.status(401).json({ error: 'Not authorized.' });
@@ -62,35 +88,25 @@ class MeetappController {
     return res.status(200).send();
   }
 
-  // async show(req, res) {
-  //   const { id } = req.params;
+  async show(req, res) {
+    const { id } = req.params;
 
-  //   const meetapp = await Meetapp.findByPk(id, {
-  //     include: [
-  //       {
-  //         model: User,
-  //         as: 'user',
-  //         attributes: ['id', 'name', 'email'],
-  //       },
-  //       {
-  //         model: File,
-  //         as: 'file',
-  //         attributes: ['id', 'path', 'url'],
-  //       },
-  //       {
-  //         model: Subscription,
-  //         as: 'subscribers',
-  //         attributes: ['user_id'],
-  //       },
-  //     ],
-  //   });
+    const student = await Student.findByPk(id, {
+      include: [
+        {
+          model: User,
+          as: 'user',
+          attributes: ['id', 'name', 'email'],
+        },
+      ],
+    });
 
-  //   if (!meetapp) {
-  //     return res.status(400).json({ error: 'Meetapp does not exists' });
-  //   }
+    if (!student) {
+      return res.status(400).json({ error: 'Student does not exists' });
+    }
 
-  //   return res.status(200).json({ meetapp });
-  // }
+    return res.status(200).json({ student });
+  }
 }
 
 export default new MeetappController();
