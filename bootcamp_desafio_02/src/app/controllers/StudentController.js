@@ -55,14 +55,8 @@ class MeetappController {
       where: { email: req.body.email },
     });
 
-    if (studentExists) {
+    if (studentExists && student.email !== req.body.email) {
       return res.status(400).json({ error: 'Email already exists.' });
-    }
-
-    const { email } = student;
-    const { email: sendedEmail } = req.body;
-    if (email === sendedEmail) {
-      return res.status(400).json({ error: 'This email already exists' });
     }
 
     if (student.user_id !== user_id) {
