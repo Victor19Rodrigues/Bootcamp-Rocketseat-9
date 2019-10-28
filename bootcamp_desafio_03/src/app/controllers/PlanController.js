@@ -71,13 +71,13 @@ class PlanController {
   async delete(req, res) {
     const user_id = req.userId;
 
-    const student = await Plan.findByPk(req.params.id);
+    const plan = await Plan.findByPk(req.params.id);
 
-    if (student.user_id !== user_id) {
+    if (plan.user_id !== user_id) {
       return res.status(401).json({ error: 'Not authorized.' });
     }
 
-    await student.destroy();
+    await plan.destroy();
 
     return res.status(200).send();
   }
@@ -85,7 +85,7 @@ class PlanController {
   async show(req, res) {
     const { id } = req.params;
 
-    const student = await Plan.findByPk(id, {
+    const plan = await Plan.findByPk(id, {
       include: [
         {
           model: User,
@@ -95,11 +95,11 @@ class PlanController {
       ],
     });
 
-    if (!student) {
-      return res.status(400).json({ error: 'Student does not exists' });
+    if (!plan) {
+      return res.status(400).json({ error: 'Plan does not exists' });
     }
 
-    return res.status(200).json({ student });
+    return res.status(200).json({ plan });
   }
 }
 

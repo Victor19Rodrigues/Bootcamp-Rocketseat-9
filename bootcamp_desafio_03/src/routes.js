@@ -22,10 +22,10 @@ routes.delete('/students/:id/', StudentController.delete);
 routes.get('/students', StudentController.index);
 routes.get('/students/:id', StudentController.show);
 
-routes.post('/plans', PlanController.store);
+routes.post('/plans', validatePlanStore, PlanController.store);
 routes.put('/plans/:id', PlanController.update);
-// routes.delete('/plans/:id/', PlanController.delete);
+routes.delete('/plans/:id/', PlanController.delete);
 routes.get('/plans', PlanController.index);
-// routes.get('/plans/:id', PlanController.show);
+routes.get('/plans/:id', PlanController.show);
 
 export default routes;
