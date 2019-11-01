@@ -1,21 +1,11 @@
 import Plan from '../models/Plan';
-import User from '../models/User';
 
 class PlanController {
   async index(req, res) {
-    const where = {};
     const page = req.query.page || 1;
 
     const plans = await Plan.findAll({
-      where,
-      order: ['id'],
-      include: [
-        {
-          model: User,
-          as: 'user',
-          attributes: ['id', 'name', 'email'],
-        },
-      ],
+      order: [['title', 'DESC']],
       limit: 10,
       offset: (page - 1) * 10,
     });
@@ -32,19 +22,12 @@ class PlanController {
       return res.status(400).json({ error: 'Plan already exists.' });
     }
 
-    const user_id = req.userId;
+    const plan = await Plan.create(req.body);
 
-    const { id, title, duration, price } = await Plan.create({
-      ...req.body,
-      user_id,
-    });
-
-    return res.json({ id, title, duration, price, user_id });
+    return res.json(plan);
   }
 
   async update(req, res) {
-    const user_id = req.userId;
-
     const plan = await Plan.findByPk(req.params.id);
 
     if (!plan) {
@@ -59,41 +42,27 @@ class PlanController {
       return res.status(400).json({ error: 'Plan already exists.' });
     }
 
-    if (plan.user_id !== user_id) {
-      return res.status(401).json({ error: 'Not authorized.' });
-    }
-
     await plan.update(req.body);
 
     return res.json(plan);
   }
 
   async delete(req, res) {
-    const user_id = req.userId;
-
     const plan = await Plan.findByPk(req.params.id);
 
-    if (plan.user_id !== user_id) {
-      return res.status(401).json({ error: 'Not authorized.' });
+    if (!plan) {
+      return res.status(400).json({ error: 'Plan does not exists' });
     }
 
     await plan.destroy();
 
-    return res.status(200).send();
+    return res.status(200).json({ message: 'Plan deleted!' });
   }
 
   async show(req, res) {
     const { id } = req.params;
 
-    const plan = await Plan.findByPk(id, {
-      include: [
-        {
-          model: User,
-          as: 'user',
-          attributes: ['id', 'name', 'email'],
-        },
-      ],
-    });
+    const plan = await Plan.findByPk(id);
 
     if (!plan) {
       return res.status(400).json({ error: 'Plan does not exists' });

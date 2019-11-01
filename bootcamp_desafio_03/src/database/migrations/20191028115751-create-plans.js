@@ -7,16 +7,10 @@ module.exports = {
         autoIncrement: true,
         primaryKey: true,
       },
-      user_id: {
-        type: Sequelize.INTEGER,
-        references: { model: 'users', key: 'id' },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
-        allowNull: false,
-      },
       title: {
         type: Sequelize.STRING,
         allowNull: false,
+        unique: true,
       },
       duration: {
         type: Sequelize.INTEGER,
@@ -24,7 +18,7 @@ module.exports = {
         defaultValue: 1,
       },
       price: {
-        type: Sequelize.DECIMAL,
+        type: Sequelize.FLOAT,
         allowNull: false,
       },
       created_at: {

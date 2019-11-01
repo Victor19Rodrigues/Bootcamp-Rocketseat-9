@@ -7,20 +7,23 @@ module.exports = {
         autoIncrement: true,
         primaryKey: true,
       },
-      user_id: {
-        type: Sequelize.INTEGER,
-        references: { model: 'users', key: 'id' },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
-        allowNull: false,
-      },
       student_id: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        references: {
+          model: 'students',
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL',
       },
       plan_id: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        references: {
+          model: 'plans',
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL',
       },
       start_date: {
         type: Sequelize.DATE,
@@ -31,7 +34,7 @@ module.exports = {
         allowNull: false,
       },
       price: {
-        type: Sequelize.DECIMAL,
+        type: Sequelize.FLOAT,
         allowNull: false,
       },
       created_at: {

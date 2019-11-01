@@ -7,13 +7,6 @@ module.exports = {
         autoIncrement: true,
         primaryKey: true,
       },
-      user_id: {
-        type: Sequelize.INTEGER,
-        references: { model: 'users', key: 'id' },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
-        allowNull: false,
-      },
       name: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -25,15 +18,15 @@ module.exports = {
       },
       age: {
         type: Sequelize.INTEGER,
-        allowNull: true,
+        allowNull: false,
       },
       weight: {
         type: Sequelize.DECIMAL,
-        allowNull: true,
+        allowNull: false,
       },
       height: {
         type: Sequelize.DECIMAL,
-        allowNull: true,
+        allowNull: false,
       },
       created_at: {
         type: Sequelize.DATE,

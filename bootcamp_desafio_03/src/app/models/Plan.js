@@ -6,7 +6,7 @@ class Plan extends Model {
       {
         title: Sequelize.STRING,
         duration: Sequelize.INTEGER,
-        price: Sequelize.DECIMAL,
+        price: Sequelize.FLOAT,
       },
       {
         sequelize,
@@ -14,10 +14,6 @@ class Plan extends Model {
     );
 
     return this;
-  }
-
-  static associate(models) {
-    this.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' });
   }
 }
 
